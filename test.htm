@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<style>
+</style>
+</head>
+<body>
+<?php
+mb_internal_encoding("UTF-8");
+?>
+<ul id="mylist"></ul>
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="is_business_day.js"></script>
+<script>
+for(i=0;i<365;i++){
+  thisDate=new Date(2018,0,1+i);
+  holiday=getHoliday(thisDate);
+  $("#mylist").append("<li>" + (thisDate.getMonth()+1) + "/" + thisDate.getDate() + " -- " + isBusinessDay(thisDate) + holiday + "</li>");
+}
+</script>
+</body>
+</html>
