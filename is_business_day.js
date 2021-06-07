@@ -67,6 +67,10 @@ function getHoliday(dateobj) {
 function getNationalHoliday(dateobj) {
   //祝日を判定する関数。
   //祝日ならばその名称、祝日でなければ空文字を返す。
+  //20140808 公開。
+  //20190221 修正。2019年対応(天皇の即位の日等)を反映。
+  //20190221 修正。2020年対応(スポーツの日等)を反映。
+  //20201229 修正。2021年対応(海の日、スポーツの日、山の日)を反映。
   var nen, tsuki, hi, yobi;
   if(dateobj.getFullYear() < 2007) {
     throw new Error("2007年以上にしてください。");
@@ -75,55 +79,66 @@ function getNationalHoliday(dateobj) {
   tsuki = dateobj.getMonth() + 1;
   hi = dateobj.getDate();
   yobi = dateobj.getDay();
-  if(tsuki == 1 && hi == 1) {
+
+  //2019年限定
+  if( nen == 2019 && tsuki == 5 && hi == 1 ){
+    return "天皇の即位の日";
+  }else if(nen == 2019 && tsuki == 10 && hi== 22 ){
+    return "即位礼正殿の儀の行われる日";
+  //2020年限定
+  }else if(nen == 2020 && tsuki == 7 && hi== 23 ){
+    return "海の日";
+  }else if(nen == 2020 && tsuki == 7 && hi== 24 ){
+    return "スポーツの日";
+  }else if(nen == 2020 && tsuki == 8 && hi== 10 ){
+    return "山の日";
+  //2021年限定
+  }else if(nen == 2021 && tsuki == 7 && hi== 22 ){
+    return "海の日";
+  }else if(nen == 2021 && tsuki == 7 && hi== 23 ){
+    return "スポーツの日";
+  }else if(nen == 2021 && tsuki == 8 && hi== 8 ){
+    return "山の日";
+//一般
+  }else if(tsuki == 1 && hi == 1) {
     return "元日";
-  }
-  if(tsuki == 2 && hi == 11) {
+  }else if(tsuki == 2 && hi == 11) {
     return "建国記念の日";
-  }
-  if(tsuki == 4 && hi == 29) {
+  }else if(tsuki == 4 && hi == 29) {
     return "昭和の日";
-  }
-  if(tsuki == 5 && hi == 3) {
+  }else if(tsuki == 5 && hi == 3) {
     return "憲法記念日";
-  }
-  if(tsuki == 5 && hi == 4) {
+  }else if(tsuki == 5 && hi == 4) {
     return "みどりの日";
-  }
-  if(tsuki == 5 && hi == 5) {
+  }else if(tsuki == 5 && hi == 5) {
     return "こどもの日";
-  }
-  if(nen >= 2016 && tsuki == 8 && hi == 11) {
-    return "山の日"; //2016-8-11から実施。
-  }
-  if(tsuki == 11 && hi == 3) {
+  }else if(nen >= 2016 && nen != 2020 && nen != 2021 && tsuki == 8 && hi == 11) {
+    return "山の日"; //2016年から。2020年と2021年だけ別。
+  }else if(tsuki == 11 && hi == 3) {
     return "文化の日";
-  }
-  if(tsuki == 11 && hi == 23) {
+  }else if(tsuki == 11 && hi == 23) {
     return "勤労感謝の日";
-  }
-  if(tsuki == 12 && hi == 23) {
-    return "天皇誕生日";
-  }
-  if(tsuki == 1 && yobi == 1 && 7 < hi && hi < 15) {
-    return "成人の日"; //1月第2月曜日;
-  }
-  if(tsuki == 7 && yobi == 1 && 14 < hi && hi < 22) {
-    return "海の日"; //7月第3月曜日
-  }
-  if(tsuki == 9 && yobi == 1 && 14 < hi && hi < 22) {
-    return "敬老の日"; //9月第3月曜日
-  }
-  if(tsuki == 10 && yobi == 1 && 7 < hi && hi < 15) {
-    return "体育の日"; //10月第2月曜日
-  }
-  if(tsuki == 3 && hi == shunbun(nen)) {
+  }else if(nen<=2018 && tsuki == 12 && hi == 23) {
+    return "天皇誕生日";//2018年まで。2020年は天皇の即位の日。
+  }else if(nen >= 2020 && tsuki == 2 && hi == 23) {
+    return "天皇誕生日";//2020年から。
+  }else if(tsuki == 1 && yobi == 1 && 7 < hi && hi < 15) {
+    return "成人の日"; //1月第2月曜日。
+  }else if(nen != 2020 && nen != 2021 && tsuki == 7 && yobi == 1 && 14 < hi && hi < 22) {
+    return "海の日"; //7月第3月曜日。2020年と2021年だけ別。
+  }else if(tsuki == 9 && yobi == 1 && 14 < hi && hi < 22) {
+    return "敬老の日"; //9月第3月曜日。
+  }else if(nen<=2019 && tsuki == 10 && yobi == 1 && 7 < hi && hi < 15) {
+    return "体育の日"; //10月第2月曜日。2019年まで。
+  }else if(nen >=2022 && tsuki == 10 && yobi == 1 && 7 < hi && hi < 15) {
+    return "スポーツの日"; //10月第2月曜日。2022年から。2020年と2021年だけ別。
+  }else if(tsuki == 3 && hi == shunbun(nen)) {
     return "春分の日";
-  }
-  if(tsuki == 9 && hi == shubun(nen)) {
+  }else if(tsuki == 9 && hi == shubun(nen)) {
     return "秋分の日";
+  }else{
+    return "";
   }
-  return "";
 }
 
 function shunbun(nen) { //春分の日
